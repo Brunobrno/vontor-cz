@@ -1,0 +1,11 @@
+Sitemap: https://vontor.com/sitemap.xml
+Disallow: /admin/
+Allow: /
+Allow: /social/public/
+Allow: /social/post/
+Allow: /social/community/
+Allow: /social/main/
+Allow: /social/profile/
+Allow: /social/login/
+Allow: /social/register/
+Crawl-delay: 10
