@@ -17,6 +17,12 @@ from django.core.management.utils import get_random_secret_key
 
 from django.conf import settings
 
+from dotenv import load_dotenv
+
+if not os.getenv("DATABASE_HOST"):
+    load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
