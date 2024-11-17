@@ -120,7 +120,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     #CUSTOM
-    'tools.middleware.CustomMaxUploadSizeMiddleware',
+    #'tools.middleware.CustomMaxUploadSizeMiddleware',
 
 
     'whitenoise.middleware.WhiteNoiseMiddleware',# díky tomu funguje načítaní static files
