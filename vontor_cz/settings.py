@@ -17,6 +17,12 @@ from django.core.management.utils import get_random_secret_key
 
 from django.conf import settings
 
+from dotenv import load_dotenv
+
+if not os.getenv("DATABASE_HOST"):
+    load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -50,7 +56,22 @@ else:
     SECURE_BROWSER_XSS_FILTER = False
     SECURE_CONTENT_TYPE_NOSNIFF = False
 
+''' MOŽNA LEPŠÍ TOTO!
 
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    SECURE_BROWSER_XSS_FILTER = False
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+
+'''
 
 # Application definition
 
@@ -99,7 +120,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     #CUSTOM
-    'tools.middleware.CustomMaxUploadSizeMiddleware',
+    #'tools.middleware.CustomMaxUploadSizeMiddleware',
 
 
     'whitenoise.middleware.WhiteNoiseMiddleware',# díky tomu funguje načítaní static files
@@ -224,10 +245,10 @@ for app in settings.INSTALLED_APPS:
 
 
 
-AWS_ACCESS_KEY_ID =  os.getenv('AWS_ACCESS_KEY_ID', 'AKIA6GBMCJ7F545FLBHC')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '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')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'vontor-cz')
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME','eu-central-1')
+AWS_ACCESS_KEY_ID =  os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 
 # For serving static files directly from S3
 AWS_S3_URL_PROTOCOL = 'https'
