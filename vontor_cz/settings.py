@@ -150,7 +150,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'vontor_cz.wsgi.application'
+
 ASGI_APPLICATION = 'vontor_cz.asgi.application' #daphne
 
 

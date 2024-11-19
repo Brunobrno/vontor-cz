@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import Message
+from .models import AnonMessage
 
 
 class AnonymChatConsumer(AsyncWebsocketConsumer):
@@ -43,4 +43,4 @@ class AnonymChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def create_message(self, message):
         # Create a new message in the database
-        Message.objects.create(message=message)
+        AnonMessage.objects.create(message=message)

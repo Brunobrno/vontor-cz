@@ -6,6 +6,9 @@
 ```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
 .\venv\Scripts\Activate
+
+#start server
+daphne -b 0.0.0.0 -p 8000 vontor_cz.asgi:application
 ```
 
 
