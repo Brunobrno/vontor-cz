@@ -40,12 +40,12 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url('/img/other/svg/prev.svg');
+    background-image: url('/static/home/img/carousel/prev.svg');
     background-position: center;
     background-size: auto 100%;
     background-repeat: no-repeat;
     cursor: pointer;
-    opacity: .5;
+    opacity: 1;
 }
 
 .carousel-controls .next{
@@ -56,7 +56,7 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url('/img/other/svg/next.svg');
+    background-image: url('/static/home/img/carousel/next.svg');
     background-position: center;
     background-size: auto 100%;
     background-repeat: no-repeat;
@@ -93,28 +93,28 @@
 
 
 .carousel-item-first{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-second{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-third{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-fourth{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-fifth{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-sixth{
-    background-image: url("https://picsum.photos/400/200?grayscale");
+    background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 
 
 @media only screen and (min-width: 991px){
     .prev, .next{
-        height: 1em !important;
-        width: 1em !important;
+        height: 1.5em !important;
+        width: 1.5em !important;
     }
 }

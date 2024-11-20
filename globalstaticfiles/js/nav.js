@@ -1,7 +1,9 @@
-$(document).ready(function () {
-    $('#toggleNav').click(function () {
-        console.log("Nav Toggle");
-        $('nav').toggleClass('nav-collapsed');
-        $(this).find('img').toggleClass('toggle-icon-rotated');
+$(document).ready(function() {
+    const $stickyElm = $('nav');
+    const stickyOffset = $stickyElm.offset().top;
+
+    $(window).on('scroll', function() {
+        const isSticky = $(window).scrollTop() > stickyOffset;
+        $stickyElm.toggleClass('isSticky-nav', isSticky);
     });
 });

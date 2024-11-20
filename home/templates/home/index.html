@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,17 +6,21 @@
 	<title>Home - vontor.cz</title>
 
 
-	{% if extra_css_list %}
-        {% for css_file in extra_css_list %}
-            <link rel="stylesheet" type="text/css" href="{% static css_file %}">
-        {% endfor %}
-    {% endif %}
+	<link rel="stylesheet" href="{% static "home/css/components/carousel.css" %}">
+	<link rel="stylesheet" href="{% static "home/css/index.css" %}">
 </head>
 <body>
+	
+	
 	{% include "home/components/carousel.html" %}
-
-
-	{% include "app_name/template1.html" with extra_css_list="['app_name/css/extra1.css', 'app_name/css/extra2.css']" %}
-	{% include "app_name/template2.html" with extra_css_list="['app_name/css/extra3.css']" %}
+	<span id="nav-trigger-fixed-element"></span>
+	{% include "utilities/nav.html" %}
+	
+	<!-- include "app_name/template2.html" with extra_css_list="['app_name/css/extra3.css']" -->
+	<img src="https://picsum.photos/2000/2000" alt="">
+	<img src="https://picsum.photos/200/300" alt="">
+	<img src="https://picsum.photos/200/300" alt="">
+	<img src="https://picsum.photos/200/300" alt="">
+	<img src="https://picsum.photos/200/300" alt="">
 </body>
 </html>

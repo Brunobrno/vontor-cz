@@ -58,7 +58,7 @@ $(document).ready(function() {
 
         setTimeout(function() {
             jump = 1;
-            carouselInner.css('transition', 'all ease .5s');
+            carouselInner.css('transition', 'all ease 1.5s');
         });
         updateIndicators();
     });
