@@ -1,0 +1,26 @@
+.introduction{
+    display: flex;
+    flex-direction: column;
+
+    color: white;
+    padding: 10em;
+}
+.introduction article{
+    width: 30%;
+    background-color: cadetblue;
+
+    padding: 1em;
+    border-radius: 1em;
+}
+.introduction article:nth-child(1){
+    transform: rotate(5deg);
+    align-self: flex-start;
+}
+.introduction article:nth-child(2){
+    transform: rotate(3deg);
+    align-self: flex-end;
+}
+.introduction article:nth-child(3){
+    transform: rotate(-2deg);
+    align-self: flex-start;
+}
