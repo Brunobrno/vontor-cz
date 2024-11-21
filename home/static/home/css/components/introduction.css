@@ -6,10 +6,10 @@
     padding: 10em;
 }
 .introduction article{
-    width: 30%;
+    width: 40%;
     background-color: cadetblue;
 
-    padding: 1em;
+    padding: 2em;
     border-radius: 1em;
 }
 .introduction article:nth-child(1){
