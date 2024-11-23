@@ -24,3 +24,24 @@ body{
     font-weight: 400;
     font-style: normal;
 }
+footer a{
+    color: white;
+    text-decoration: none;
+}
+footer{
+    background-color: #008b8b;
+
+    margin-top: 2em;
+    display: flex;
+
+    color: white;
+    align-items: center;
+    justify-content: space-evenly;
+}
+footer address{
+    padding: 1em;
+    font-style: normal;
+}
+footer .contacts{
+    font-size: 2em;
+}

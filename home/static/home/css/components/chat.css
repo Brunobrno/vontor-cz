@@ -1,0 +1,25 @@
+.chat{
+    border-radius: 1em;
+    display: flex;
+    width: 30%;
+    /* height: 30%; */
+    aspect-ratio: 1;
+    background-color: aquamarine;
+    flex-direction: column;
+    justify-content: space-between;
+
+    margin: auto;
+    padding: 1em;
+}
+.chat article{
+    text-align: center;
+    align-content: flex-start;
+}
+.chat .messages{
+    flex: auto;
+}
+.chat footer{
+    border-radius: 1em;
+    padding: 1em;
+    align-content: flex-end;
+}

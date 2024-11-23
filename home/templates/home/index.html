@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="{% static "home/css/index.css" %}">
 	<link rel="stylesheet" href="{% static 'home/css/components/introduction.css' %}">
 	<link rel="stylesheet" href="{% static 'home/css/components/projects.css' %}">
+	<link rel="stylesheet" href="{% static 'home/css/components/chat.css' %}">
 </head>
 <body>
 	
@@ -19,7 +20,9 @@
 	{% include "utilities/nav.html" %}
 	
 	{% include 'home/components/introduction.html' %}
+	{% include "home/components/chat.html" %}
 	{% include 'home/components/projects.html' %}
+	{% include 'home/components/footer.html' %}
 	<!-- include "app_name/template2.html" with extra_css_list="['app_name/css/extra3.css']" -->
 	<!--<img src="https://picsum.photos/2000/2000" alt="">
 	<img src="https://picsum.photos/200/300" alt="">
