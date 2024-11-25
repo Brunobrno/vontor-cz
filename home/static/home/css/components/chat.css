@@ -1,25 +1,20 @@
 .chat{
+    width: 100%;
+}
+.chat .warning{
+    background-color: red;
+    color: white;
+}
+.chat .message-box{
     border-radius: 1em;
+    padding: 1em;
     display: flex;
-    width: 30%;
-    /* height: 30%; */
-    aspect-ratio: 1;
-    background-color: aquamarine;
-    flex-direction: column;
-    justify-content: space-between;
-
-    margin: auto;
-    padding: 1em;
+    gap: 1em;
+    justify-content: flex-start;
 }
-.chat article{
-    text-align: center;
-    align-content: flex-start;
+.chat .message-box input{
+    width: 40ch;
 }
-.chat .messages{
-    flex: auto;
-}
-.chat footer{
-    border-radius: 1em;
-    padding: 1em;
-    align-content: flex-end;
+.chat .sunken-panel{
+    min-height: 35ch;
 }
