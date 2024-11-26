@@ -4,9 +4,10 @@
 
     color: white;
     padding: 10em;
+    gap: 3em;
 }
 .introduction article{
-    width: 40%;
+    width: 50ch;
     background-color: cadetblue;
 
     padding: 2em;

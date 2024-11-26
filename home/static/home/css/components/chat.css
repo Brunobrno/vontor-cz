@@ -18,3 +18,15 @@
 .chat .sunken-panel{
     min-height: 35ch;
 }
+.chat fieldset{
+    display: flex;
+
+    width: min-content;
+    align-items: center;
+}
+.chat .hidden{
+    display: none !important;
+}
+.chat fieldset img{
+    width: 5em;
+}

@@ -31,6 +31,14 @@
 			<div class="message-box">
 				<input placeholder="what's up?..." type="text" name="anon-message" id="anon-message"><button id="send-anon-message" type="submit">Send</button>
 			</div>
+
+			<fieldset id="error-chat" class="hidden">
+				<legend>
+					You lost connection!
+				</legend>
+				<img src="{% static 'img/errors/error_icon.png' %}" alt="error icon">
+				<button id="reconnect">reconnect</button>
+			</fieldset>
 		</div>
 	</div>
 	

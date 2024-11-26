@@ -13,12 +13,14 @@ $(document).ready(function () {
 
     console.log({'websocket_url': ws_url});
 
-    const socket = new WebSocket(ws_url);
+    let socket = new WebSocket(ws_url);
 
     // Select elements
     const $messageInput = $('#anon-message');
     const $sendButton = $('#send-anon-message');
     const $messagesContainer = $('#messages');
+
+    const $reconnectButton = $('#reconnect');
 
     // Event: Connection opened
     socket.onopen = function () {
@@ -53,19 +55,33 @@ $(document).ready(function () {
     socket.onclose = function () {
         console.warn('WebSocket connection closed.');
 
-
+        toggle_reconnect_button();
     };
 
     // Event: Error occurred
     socket.onerror = function (error) {
         console.error('WebSocket error:', error);
+
+        toggle_reconnect_button();
     };
+
+    function toggle_reconnect_button(){
+        $('#error-chat').toggleClass("hidden");
+    }
+
+    $reconnectButton.on('click', function(){
+        console.log("reconnecting!");
+
+        toggle_reconnect_button();
+
+        socket = new WebSocket(ws_url);
+    });
 
     // Send message to the server when the button is clicked
     $sendButton.on('click', function () {
         const message = $messageInput.val().trim();
 
-        if (message && socket.readyState === WebSocket.OPEN) {
+        if (message) {
             socket.send(JSON.stringify({ message: message })); // Send the message to the server
             console.log('Message sent:', message);
 
@@ -83,6 +99,9 @@ $(document).ready(function () {
 
             // Clear the input field
             $messageInput.val('');
+        } else if(socket.readyState === WebSocket.OPEN) {
+            console.log("socket.readyState === WebSocket.OPEN: " + socket.readyState === WebSocket.OPEN);
+            toggle_reconnect_button(); 
         } else {
             console.warn('Cannot send message. WebSocket is not open or message is empty.');
         }
