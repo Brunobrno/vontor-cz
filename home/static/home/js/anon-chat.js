@@ -90,7 +90,7 @@ $(document).ready(function () {
             const timeWithoutSeconds = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });  // `hour12: false` forces 24-hour format
 
             // Format as "Nov. 25, 2024, 14:55"
-            var time_output = `${monthNames[time.getMonth()]} ${time.getDate()}, ${time.getFullYear()}, ${timeWithoutSeconds}`;
+            var time_output = `${monthNames[time.getMonth()]}. ${time.getDate()}, ${time.getFullYear()}, ${timeWithoutSeconds}`;
 
 
             const $sentMessage = $('<tr>').append($('<td>').text(time_output)).append($('<td>').text(message));
