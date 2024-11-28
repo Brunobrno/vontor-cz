@@ -34,7 +34,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG_ENV", True)
+if os.getenv("DEBUG_ENV", True) in ["False", "false"]:
+    DEBUG = False
+else:
+    DEBUG = True
+    
+print(".env DEBUG: " + os.getenv("DEBUG_ENV"))
+print("Actual state of DEBUG: " + str(DEBUG))
 
 ALLOWED_HOSTS = ["stingray-app-n7gfu.ondigitalocean.app", "www.vontor.cz", "vontor.cz", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ['https://vontor.cz', "https://www.vontor.cz"]
@@ -282,6 +288,7 @@ if DEBUG:#pokud je debug mode spuštěn tak budou podaváný lokalní static sou
     
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 
 #--------------------END-MEDIA-STATIC-SECTION------------------
 

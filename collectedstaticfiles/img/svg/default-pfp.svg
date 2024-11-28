@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#e0e0e0"/>
+  
+  <!-- Head -->
+  <circle cx="100" cy="70" r="40" fill="#bdbdbd"/>
+  
+  <!-- Shoulders with rounded top edges -->
+  <rect x="40" y="100" width="120" height="80" rx="20" ry="20" fill="#9e9e9e"/>
+</svg>
