@@ -50,21 +50,7 @@ CORS_ORIGINS_WHITELIST = ['https://vontor.cz', "https://www.vontor.cz"]
 
 
 #bezpečnost/SSL
-if DEBUG == True:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    SECURE_BROWSER_XSS_FILTER = False
-    SECURE_CONTENT_TYPE_NOSNIFF = False
-
-''' MOŽNA LEPŠÍ TOTO!
-
-if not DEBUG:
+if DEBUG is True:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
@@ -77,10 +63,7 @@ else:
     SECURE_BROWSER_XSS_FILTER = False
     SECURE_CONTENT_TYPE_NOSNIFF = False
 
-'''
-
 # Application definition
-
 INSTALLED_APPS = [
     'daphne', #asgi bude fungovat lokálně (musí být na začátku)
 
@@ -274,12 +257,16 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 
+
+
 from storages.backends.s3boto3 import S3Boto3Storage
 class StaticStorage(S3Boto3Storage):
     location = 'static'
     default_acl = 'public-read'  # Optional: Set ACL for the uploaded files
 
 STATICFILES_STORAGE = 'vontor_cz.settings.StaticStorage'#volám tu funkci nademnou
+
+
 
 if DEBUG:#pokud je debug mode spuštěn tak budou podaváný lokalní static soubory
     print('------------------------\nDEBUG MODE SPUŠTĚŇ NEZAPOMENOUT VYPNOUT !!!\n Nepoužívají se AWS static soubory!\n------------------------')
@@ -289,6 +276,8 @@ if DEBUG:#pokud je debug mode spuštěn tak budou podaváný lokalní static sou
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
+print("Static url: " + STATIC_URL)
+print("Media url: " + MEDIA_URL)
 
 #--------------------END-MEDIA-STATIC-SECTION------------------
 
