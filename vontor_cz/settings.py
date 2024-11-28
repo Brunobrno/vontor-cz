@@ -393,3 +393,33 @@ CKEDITOR_5_CONFIGS = {
 }
 
 CKEDITOR_5_ALLOW_ALL_FILE_TYPES = True
+
+
+
+
+
+print("AWS Credentials from .env:")
+print("AWS_ACCESS_KEY_ID:", AWS_ACCESS_KEY_ID)
+print("AWS_SECRET_ACCESS_KEY:", AWS_SECRET_ACCESS_KEY)
+print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
+print("AWS_S3_REGION_NAME:", AWS_S3_REGION_NAME)
+#TEST UPLODOVANÍ NA S3 BUCKET
+import boto3
+
+session = boto3.Session(
+    aws_access_key_id='AKIA6GBMCJ7F545FLBHC',
+    aws_secret_access_key='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',
+    region_name='eu-central-1'
+)
+
+s3 = session.resource('s3')
+bucket_name = 'vontor-cz'
+
+# Test připojení
+try:
+    bucket = s3.Bucket(bucket_name)
+    for obj in bucket.objects.limit(10):  # Omezit na 10 položek
+        print(obj.key)
+    print("Bucket připojen úspěšně.")
+except Exception as e:
+    print("Chyba při připojení k S3:", str(e))
