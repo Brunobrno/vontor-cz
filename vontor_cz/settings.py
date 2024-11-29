@@ -42,6 +42,8 @@ else:
 print(".env DEBUG: " + os.getenv("DEBUG_ENV"))
 print("Actual state of DEBUG: " + str(DEBUG))
 
+
+
 ALLOWED_HOSTS = ["stingray-app-n7gfu.ondigitalocean.app", "www.vontor.cz", "vontor.cz", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ['https://vontor.cz', "https://www.vontor.cz"]
 CSFR_ALLOWED_ORIGINS = ['https://vontor.cz', "https://www.vontor.cz"]
@@ -161,6 +163,16 @@ DATABASES = {
     }
 }
 
+#DATABASE HEALTCHECK
+try:
+        # Check if the default database connection is working
+        connection = connections['default']
+        connection.ensure_connection()
+        print("Database connection is successful.")
+    except OperationalError:
+        print("Database connection failed!")
+        raise Exception("Database connection not available, shutting down!")
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -211,7 +223,7 @@ LOGIN_URL = 'login'
 
 #---------------------MEDIA + STATIC, AWS--------------------------
 
-STATIC_ROOT = BASE_DIR / "collectedstaticfiles" 
+#STATIC_ROOT = BASE_DIR / "collectedstaticfiles" 
 
 
 STATICFILES_DIRS = [
@@ -233,28 +245,7 @@ for app in settings.INSTALLED_APPS:
     # kontrola jestli cesta k 'static' existuje
     if static_path.exists():
         STATICFILES_DIRS.append(static_path) #finální přidání cesty
-        
 
-
-
-AWS_ACCESS_KEY_ID =  os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-AWS_QUERYSTRING_AUTH = False
-
-# For serving static files directly from S3
-AWS_S3_URL_PROTOCOL = 'https'
-AWS_S3_USE_SSL = True
-AWS_S3_VERIFY = True
-
-
-# Set media URL with prefix
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 
 if DEBUG:
     # Debug mode: Use local storage
@@ -275,21 +266,21 @@ else:
         "staticfiles": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "bucket_name": config("AWS_STORAGE_BUCKET_NAME"),
-                "region_name": config("AWS_S3_REGION_NAME"),
-                "access_key": config("AWS_ACCESS_KEY_ID"),
-                "secret_key": config("AWS_SECRET_ACCESS_KEY"),
+                "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+                "region_name": os.getenv("AWS_S3_REGION_NAME"),
+                "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+                "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
                 "default_acl": "public-read",
-                "custom_domain": f"{config('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com",
+                "custom_domain": f"{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com",
             },
         },
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "bucket_name": config("AWS_STORAGE_BUCKET_NAME"),
-                "region_name": config("AWS_S3_REGION_NAME"),
-                "access_key": config("AWS_ACCESS_KEY_ID"),
-                "secret_key": config("AWS_SECRET_ACCESS_KEY"),
+                "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+                "region_name": os.getenv("AWS_S3_REGION_NAME"),
+                "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+                "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
             },
         },
     }
@@ -300,18 +291,8 @@ class StaticStorage(S3Boto3Storage):
     default_acl = 'public-read'  # Optional: Set ACL for the uploaded files
 
 
-
-if DEBUG:#pokud je debug mode spuštěn tak budou podaváný lokalní static soubory
-    print('------------------------\nDEBUG MODE SPUŠTĚŇ NEZAPOMENOUT VYPNOUT !!!\n Nepoužívají se AWS static soubory!\n------------------------')
-    # Serve static files locally
-    STATIC_URL = '/static/'
-    
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-
-print("Static url: " + STATIC_URL)
-print("Media url: " + MEDIA_URL)
+#print("Static url: " + STATIC_URL)
+#print("Media url: " + MEDIA_URL)
 
 #--------------------END-MEDIA-STATIC-SECTION------------------
 
@@ -428,35 +409,3 @@ CKEDITOR_5_CONFIGS = {
 
 CKEDITOR_5_ALLOW_ALL_FILE_TYPES = True
 
-
-
-print("STATICFILES_DIRS:", STATICFILES_DIRS)
-
-
-print("AWS Credentials from .env:")
-print("AWS_ACCESS_KEY_ID:", AWS_ACCESS_KEY_ID)
-print("AWS_SECRET_ACCESS_KEY:", AWS_SECRET_ACCESS_KEY)
-print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
-print("AWS_S3_REGION_NAME:", AWS_S3_REGION_NAME)
-
-print('STATICFILES_STORAGE: ' , STATICFILES_STORAGE)
-#TEST UPLODOVANÍ NA S3 BUCKET
-import boto3
-
-session = boto3.Session(
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    region_name=AWS_S3_REGION_NAME
-)
-
-s3 = session.resource('s3')
-bucket_name = AWS_STORAGE_BUCKET_NAME
-
-# Test připojení
-try:
-    bucket = s3.Bucket(bucket_name)
-    for obj in bucket.objects.limit(10):  # Omezit na 10 položek
-        print(obj.key)
-    print("Bucket připojen úspěšně.")
-except Exception as e:
-    print("Chyba při připojení k S3:", str(e))
