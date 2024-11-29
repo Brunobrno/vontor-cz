@@ -17,6 +17,7 @@ from django.core.management.utils import get_random_secret_key
 
 from django.conf import settings
 
+from django.db import OperationalError, connections
 from dotenv import load_dotenv
 
 if not os.getenv("DATABASE_HOST"):
@@ -39,7 +40,7 @@ if os.getenv("DEBUG_ENV", True) in ["False", "false"]:
 else:
     DEBUG = True
     
-print(".env DEBUG: " + os.getenv("DEBUG_ENV"))
+print(".env DEBUG: " + str(os.getenv("DEBUG_ENV")))
 print("Actual state of DEBUG: " + str(DEBUG))
 
 
@@ -165,13 +166,13 @@ DATABASES = {
 
 #DATABASE HEALTCHECK
 try:
-        # Check if the default database connection is working
-        connection = connections['default']
-        connection.ensure_connection()
-        print("Database connection is successful.")
-    except OperationalError:
-        print("Database connection failed!")
-        raise Exception("Database connection not available, shutting down!")
+    # Check if the default database connection is working
+    connection = connections['default']
+    connection.ensure_connection()
+    print("Database connection is successful.")
+except OperationalError:
+    print("Database connection failed!")
+    raise Exception("Database connection not available, shutting down!")
 
 
 # Password validation
@@ -284,11 +285,6 @@ else:
             },
         },
     }
-
-from storages.backends.s3boto3 import S3Boto3Storage
-class StaticStorage(S3Boto3Storage):
-    location = 'static'
-    default_acl = 'public-read'  # Optional: Set ACL for the uploaded files
 
 
 #print("Static url: " + STATIC_URL)
