@@ -18,3 +18,6 @@ class AnonMessage(models.Model):
         """
         queryset = cls.objects.order_by('-time')[:count]
         return queryset[::-1] if reverse else queryset
+    
+class TestMedia(models.Model):
+   file = models.FileField()
