@@ -20,8 +20,9 @@ from django.conf import settings
 from django.db import OperationalError, connections
 from dotenv import load_dotenv
 
-if not os.getenv("DATABASE_HOST"):
-    load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
+
+
+load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,12 +36,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.getenv("DEBUG_ENV", True) in ["False", "false"]:
-    DEBUG = False
-else:
+if os.getenv("DEBUG", False) in ["True", "true", True]:
     DEBUG = True
+else:
+    DEBUG = False
+
     
-print(".env DEBUG: " + str(os.getenv("DEBUG_ENV")))
+print(".env DEBUG: " + str(os.getenv("DEBUG", False)))
 print("Actual state of DEBUG: " + str(DEBUG))
 
 
@@ -53,7 +55,7 @@ CORS_ORIGINS_WHITELIST = ['https://vontor.cz', "https://www.vontor.cz"]
 
 
 #bezpečnost/SSL
-if DEBUG is True:
+if DEBUG is False:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
@@ -224,8 +226,9 @@ LOGIN_URL = 'login'
 
 #---------------------MEDIA + STATIC, AWS--------------------------
 
-#STATIC_ROOT = BASE_DIR / "collectedstaticfiles" 
+STATIC_ROOT = BASE_DIR / "collectedstaticfiles" 
 
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'globalstaticfiles',
@@ -287,8 +290,7 @@ else:
     }
 
 
-#print("Static url: " + STATIC_URL)
-#print("Media url: " + MEDIA_URL)
+print("Static url: " + STATIC_URL)
 
 #--------------------END-MEDIA-STATIC-SECTION------------------
 
