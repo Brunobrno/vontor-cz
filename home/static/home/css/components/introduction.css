@@ -13,6 +13,11 @@
     padding: 2em;
     border-radius: 1em;
 }
+
+.introduction article header{
+    
+}
+
 .introduction article:nth-child(1){
     transform: rotate(5deg);
     align-self: flex-start;
