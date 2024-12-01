@@ -21,3 +21,6 @@
   display: grid;
   grid-template:auto / auto auto;
 }
+.projects a{
+  color: black;
+}

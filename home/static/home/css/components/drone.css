@@ -24,7 +24,6 @@
     /*background-color:rgb(121 121 121 / 50%);*/
 
     height: 100%;
-    margin: 3em;
     display: flex;
 
     border-radius: 2em;
@@ -42,7 +41,33 @@
     flex: 1;
 }
 .drone article main{
-    font-size: 1.5em;
-    width: 60%;
+    width: 90%;
+    display: flex;
+    font-size: 1.25em;
+    /* width: 60%; */
     flex: 3;
+    flex-direction: row;
+    gap: 2em;
+    /* flex-wrap: wrap; */
+    justify-content: space-evenly;
+}
+.drone a{
+    color: white;
+}
+.drone article div{
+    flex: 1;
+    font-size: 1.5em;
+}
+
+
+@media only screen and (max-width: 990px) {
+    .drone article header h1{
+        font-size: 2em;
+    
+        font-weight: 200;
+    }
+
+    .drone article main{
+        font-size: 1em;
+    }
 }
