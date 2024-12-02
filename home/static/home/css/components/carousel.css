@@ -93,15 +93,15 @@
 
 
 .carousel-item-first{
-    background-image: url("https://picsum.photos/1500/500?grayscale");
+    background-image: url("/static/home/img/carousel/content/italy.png");
 }
 .carousel-item-second{
-    background-image: url("https://picsum.photos/1500/500?grayscale");
+    background-image: url("/static/home/img/carousel/content/camera.jpg");
 }
 .carousel-item-third{
-    background-image: url("https://picsum.photos/1500/500?grayscale");
+    background-image: url("/static/home/img/carousel/content/programing.jpg");
 }
-.carousel-item-fourth{
+/*.carousel-item-fourth{
     background-image: url("https://picsum.photos/1500/500?grayscale");
 }
 .carousel-item-fifth{
@@ -109,7 +109,7 @@
 }
 .carousel-item-sixth{
     background-image: url("https://picsum.photos/1500/500?grayscale");
-}
+}*/
 
 
 @media only screen and (min-width: 991px){
