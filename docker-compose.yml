@@ -24,8 +24,22 @@ services:
       - tailscale
     env_file:
       - .env
+    #loading enviroment variables from DigitalOcean
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_ENGINE=${DATABASE_ENGINE}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - TAILSCALE_API_KEY=${TAILSCALE_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - AWS_S3_REGION_NAME=${AWS_S3_REGION_NAME}
+      - DEBUG=${DEBUG}
+
     build: .
-    #command: gunicorn vontor_cz.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
