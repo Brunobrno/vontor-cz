@@ -7,10 +7,13 @@ $(document).ready(function () {
     };
     // Function to set video quality
     function setVideoDroneQuality() {
+
         const screenWidth = $(window).width(); // Get screen width
         const $sourceElement = $('#drone-video');
+        
 
-        console.log($('#drone-video').data("static"));
+        $sourceElement.height($('.drone article').height()); // Get the height of the source div
+
         // Determine the appropriate video source
         if (screenWidth >= 1920) {
             $sourceElement.attr('src', $('#drone-video').data("static") + videoSources.fullHD);
@@ -22,10 +25,15 @@ $(document).ready(function () {
 
         // Reload the video
         $('#drone-video')[0].load();
+
+        console.log("video set!");
+
     }
 
     // Set video quality on page load
+    console.log("adjust video");
     setVideoDroneQuality();
+
 
     // Optional: Adjust on window resize
     $(window).resize(setVideoDroneQuality);

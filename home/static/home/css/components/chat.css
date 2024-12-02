@@ -30,3 +30,9 @@
 .chat fieldset img{
     width: 5em;
 }
+
+@media only screen and (max-width: 990px) {
+    .chat .window{
+        width: 100% !important;
+    }
+}

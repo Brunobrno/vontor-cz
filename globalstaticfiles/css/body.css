@@ -44,10 +44,12 @@ footer address{
 }
 footer .contacts{
     font-size: 2em;
+
 }
 
 @media only screen and (max-width: 990px){
     footer{
         flex-direction: column;
+        padding-bottom: 1em;
     }
   }

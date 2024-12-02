@@ -24,3 +24,20 @@
 .projects a{
   color: black;
 }
+
+@media only screen and (max-width: 990px){
+  .projects > header{
+    font-size: 1em;
+  }
+  .projects div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 3em;
+  }
+  .projects article{
+    width: 80%;
+    margin: auto;
+
+  }
+}
