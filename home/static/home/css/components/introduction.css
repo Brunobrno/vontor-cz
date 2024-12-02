@@ -1,0 +1,50 @@
+.introduction {
+    display: flex;
+    flex-direction: column;
+
+    color: white;
+    padding-top: 10em;
+    padding-bottom: 10em;
+
+    width: 70%;
+    margin: auto;
+    gap: 4em;
+}
+
+.introduction article {
+    background-color: cadetblue;
+
+    padding: 2em;
+    border-radius: 1em;
+}
+
+.introduction article header {}
+
+.introduction article:nth-child(1) {
+    width: 20%;
+    transform: rotate(5deg);
+    align-self: flex-start;
+}
+
+.introduction article:nth-child(2) {
+    width: 50%;
+    transform: rotate(3deg);
+    align-self: flex-end;
+}
+
+.introduction article:nth-child(3) {
+    width: 50%;
+    transform: rotate(-2deg);
+    align-self: flex-start;
+}
+@media only screen and (max-width: 990px) {
+    .introduction {
+        width: 90%;
+    }
+
+    .introduction article {
+        width: auto !important;
+        transform: none !important;
+        align-self: none !important;
+    }
+}

@@ -1,0 +1,55 @@
+html{
+    scroll-behavior: smooth;
+}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Doto:wght@300&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+body{
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.doto-font{
+    font-family: "Doto", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings: "ROND" 0;
+}
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+footer a{
+    color: white;
+    text-decoration: none;
+}
+footer{
+    background-color: #008b8b;
+
+    margin-top: 2em;
+    display: flex;
+
+    color: white;
+    align-items: center;
+    justify-content: space-evenly;
+}
+footer address{
+    padding: 1em;
+    font-style: normal;
+}
+footer .contacts{
+    font-size: 2em;
+
+}
+
+@media only screen and (max-width: 990px){
+    footer{
+        flex-direction: column;
+        padding-bottom: 1em;
+    }
+  }

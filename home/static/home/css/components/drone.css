@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
+
+.drone{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+
+
+    width: 100%;
+    color: white;
+    aspect-ratio: 16 / 9;
+}
+.drone .video-background {
+    width: 100%;
+    position: absolute;
+    object-fit: cover;
+    z-index: -1;
+}
+.drone article{
+    /*background-color:rgb(121 121 121 / 50%);*/
+
+    height: 100%;
+    display: flex;
+
+    border-radius: 2em;
+
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.drone article header h1{
+    font-size: 6em;
+
+    font-weight: 200;
+}
+.drone article header{
+    flex: 1;
+}
+.drone article main{
+    width: 90%;
+    display: flex;
+    font-size: 1.25em;
+    /* width: 60%; */
+    flex: 3;
+    flex-direction: row;
+    gap: 2em;
+    /* flex-wrap: wrap; */
+    justify-content: space-evenly;
+}
+.drone a{
+    color: white;
+}
+.drone article div{
+    flex: 1;
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+
+@media only screen and (max-width: 990px) {
+    .drone article header h1{
+        font-size: 2em;
+    
+        font-weight: 200;
+    }
+    .drone article header{
+        text-align: center;
+    }
+
+    .drone article main{
+        flex-direction: column;
+        font-size: 1em;
+    }
+    .drone article div{
+        margin: 1em;
+        text-align: center;
+    }
+}

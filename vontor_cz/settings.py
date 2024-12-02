@@ -17,10 +17,12 @@ from django.core.management.utils import get_random_secret_key
 
 from django.conf import settings
 
+from django.db import OperationalError, connections
 from dotenv import load_dotenv
 
-if not os.getenv("DATABASE_HOST"):
-    load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
+
+
+load_dotenv()  # Pouze načte proměnné lokálně, pokud nejsou dostupné
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,7 +36,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG_ENV", True)
+if os.getenv("DEBUG", False) in ["True", "true", True]:
+    DEBUG = True
+else:
+    DEBUG = False
+
+    
+print(".env DEBUG: " + str(os.getenv("DEBUG", False)))
+print("Actual state of DEBUG: " + str(DEBUG))
+
+
 
 ALLOWED_HOSTS = ["stingray-app-n7gfu.ondigitalocean.app", "www.vontor.cz", "vontor.cz", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ['https://vontor.cz', "https://www.vontor.cz"]
@@ -44,21 +55,7 @@ CORS_ORIGINS_WHITELIST = ['https://vontor.cz', "https://www.vontor.cz"]
 
 
 #bezpečnost/SSL
-if DEBUG == True:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    SECURE_BROWSER_XSS_FILTER = False
-    SECURE_CONTENT_TYPE_NOSNIFF = False
-
-''' MOŽNA LEPŠÍ TOTO!
-
-if not DEBUG:
+if DEBUG is False:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
@@ -71,10 +68,7 @@ else:
     SECURE_BROWSER_XSS_FILTER = False
     SECURE_CONTENT_TYPE_NOSNIFF = False
 
-'''
-
 # Application definition
-
 INSTALLED_APPS = [
     'daphne', #asgi bude fungovat lokálně (musí být na začátku)
 
@@ -127,8 +121,13 @@ MIDDLEWARE = [
 ]
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # For local testing
+        # Use Redis in production:
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],
+        # },
     }
 }
 
@@ -150,7 +149,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'vontor_cz.wsgi.application'
+
 ASGI_APPLICATION = 'vontor_cz.asgi.application' #daphne
 
 
@@ -166,6 +165,16 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT'),
     }
 }
+
+#DATABASE HEALTCHECK
+try:
+    # Check if the default database connection is working
+    connection = connections['default']
+    connection.ensure_connection()
+    print("Database connection is successful.")
+except OperationalError:
+    print("Database connection failed!")
+    raise Exception("Database connection not available, shutting down!")
 
 
 # Password validation
@@ -216,11 +225,10 @@ LOGIN_URL = 'login'
 
 
 #---------------------MEDIA + STATIC, AWS--------------------------
-# Import necessary modules for Django-S3 integration
-from storages.backends.s3boto3 import S3Boto3Storage
 
-STATIC_ROOT = BASE_DIR / "collectedstaticfiles"
+STATIC_ROOT = BASE_DIR / "collectedstaticfiles" 
 
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'globalstaticfiles',
@@ -241,42 +249,48 @@ for app in settings.INSTALLED_APPS:
     # kontrola jestli cesta k 'static' existuje
     if static_path.exists():
         STATICFILES_DIRS.append(static_path) #finální přidání cesty
-        
 
 
+if DEBUG:
+    # Debug mode: Use local storage
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {
+                "location": os.path.join(BASE_DIR, "media"),
+            },
+        },
+    }
+else:
+    # Production mode: Use S3
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "OPTIONS": {
+                "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+                "region_name": os.getenv("AWS_S3_REGION_NAME"),
+                "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+                "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+                "default_acl": "public-read",
+                "custom_domain": f"{os.getenv('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com",
+            },
+        },
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "OPTIONS": {
+                "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+                "region_name": os.getenv("AWS_S3_REGION_NAME"),
+                "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+                "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            },
+        },
+    }
 
-AWS_ACCESS_KEY_ID =  os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 
-# For serving static files directly from S3
-AWS_S3_URL_PROTOCOL = 'https'
-AWS_S3_USE_SSL = True
-AWS_S3_VERIFY = True
-
-
-# Set media URL with prefix
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
-
-from storages.backends.s3boto3 import S3Boto3Storage
-class StaticStorage(S3Boto3Storage):
-    location = 'static'
-    default_acl = 'public-read'  # Optional: Set ACL for the uploaded files
-
-STATICFILES_STORAGE = 'vontor_cz.settings.StaticStorage'#volám tu funkci nademnou
-
-if DEBUG:#pokud je debug mode spuštěn tak budou podaváný lokalní static soubory
-    print('------------------------\nDEBUG MODE SPUŠTĚŇ NEZAPOMENOUT VYPNOUT !!!\n Nepoužívají se AWS static soubory!\n------------------------')
-    # Serve static files locally
-    STATIC_URL = '/static/'
-    
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+print("Static url: " + STATIC_URL)
 
 #--------------------END-MEDIA-STATIC-SECTION------------------
 
@@ -392,3 +406,4 @@ CKEDITOR_5_CONFIGS = {
 }
 
 CKEDITOR_5_ALLOW_ALL_FILE_TYPES = True
+

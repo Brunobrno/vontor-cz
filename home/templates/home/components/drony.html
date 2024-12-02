@@ -1,0 +1,45 @@
+{% load static %}
+<div class="drone">
+
+	<video onload="setVideoDroneQuality()" id="drone-video" data-static="{% static '' %}" class="video-background" autoplay muted loop playsinline>
+		<source  id="video-source" src="/static/home/video/drone-background-video-480p.mp4" type="video/mp4">
+		Your browser does not support video.
+	</video>
+
+	<article>
+		<header>
+			<h1>Letecké snímky dronem</h1>
+		</header>
+
+		<main>
+			<section>
+				<h2>Opravnění</h2>
+				
+
+				A1, A2, A3 a průkaz na vysílačku!
+
+				Mohu garantovat bezpečný provoz dronu i ve složitějších podmínkách. Mám také možnost žádat o povolení k letu v blízkosti letišť!
+				
+			</section>
+			<section>
+				<h2>Cena</h2>
+
+				Nabízím letecké záběry dronem <br>za cenu <u>3 000 Kč</u>.
+
+				Pokud se nacházíte v Ostravě, doprava je zdarma. Pro oblasti mimo Ostravu účtuji 10 Kč/km.
+
+				Cena se může odvíjet ještě podle složitosti získaní povolení.*
+			</section>
+			<section>
+				<h2>Výstup</h2>
+
+				Rád Vám připravím jednoduchý sestřih videa, který můžete rychle použít, nebo Vám mohu poskytnout samotné záběry k vlastní editaci. <br>
+			
+			</section>
+		</main>
+		<div>
+			V případě zájmu mě neváhejte <a href="#contacts">kontaktovat</a>!
+		</div>
+	</article>
+	<script src="{% static 'home/js/drone.js' %}"></script>
+</div>
