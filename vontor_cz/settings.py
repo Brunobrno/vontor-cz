@@ -167,6 +167,7 @@ DATABASES = {
 }
 
 #DATABASE HEALTCHECK
+print("Database host: " + os.getenv('DATABASE_HOST'))
 try:
     # Check if the default database connection is working
     connection = connections['default']
