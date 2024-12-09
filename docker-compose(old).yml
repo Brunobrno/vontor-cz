@@ -1,7 +1,27 @@
 services:
+  tailscale:
+    image: tailscale/tailscale:stable
+    container_name: tailscale-bridge
+    hostname: vontor-cz-docker-digital-ocean
+    env_file:
+      - .env  # Load environment variables from the .env file
+    environment:
+      - TS_AUTHKEY=${TAILSCALE_API_KEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ${PWD}/ts-authkey-test/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
+
+    network_mode: host
+
   web:
-    networks:
-      - vontor-cz-net
+    depends_on:
+      - tailscale
     env_file:
       - .env
     #loading enviroment variables from DigitalOcean
@@ -34,7 +54,3 @@ services:
     environment:
       - WATCHTOWER_POLL_INTERVAL=60 # Check every minute
     restart: unless-stopped
-
-networks:
-  vontor-cz-net:
-    driver: bridge
