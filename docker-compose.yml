@@ -52,7 +52,11 @@ services:
     image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
     restart: always
     env_file:
-      - .env
+      - .env¨
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
     depends_on:
       - db  # Zálohovací služba závisí na databázi
     volumes:
