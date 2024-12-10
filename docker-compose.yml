@@ -19,8 +19,7 @@ services:
       AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
       DEBUG: ${DEBUG}
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     volumes:
       - .:/django-app
     command: sh -c "
@@ -42,11 +41,6 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DATABASE_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 #  backup:
 #    image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
