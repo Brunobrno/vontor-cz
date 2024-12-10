@@ -42,28 +42,28 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
 
-#  backup:
-#    image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
-#    restart: always
-#    env_file:
-#      - .env
-#    environment:
-#      PGPASSWORD: ${DATABASE_PASSWORD}
-#
-#      DATABASE_HOST: db
-#      DATABASE_NAME: ${DATABASE_NAME}
-#      DATABASE_USER: ${DATABASE_USER}
-#    depends_on:
-#      - db  # Zálohovací služba závisí na databázi
-#    volumes:
-#      - ./backups:/backups  # Ukládáme zálohy do lokální složky ./backups
-#    entrypoint: >
-#      sh -c "
-#      mkdir -p /backups &&  # Vytvoříme složku pro zálohy (pokud neexistuje)
-#      while true; do  # Spustí nekonečný cyklus pro pravidelný backup
-#        pg_dump -h ${DATABASE_HOST} -U ${DATABASE_USER} ${DATABASE_NAME} > /backups/backup-\$(date +%Y%m%d-%H%M%S).sql &&  # Vytvoření zálohy s aktuálním datem a časem
-#        sleep 86400;  # Počká 86400 sekund (24 hodin), než se záloha zopakuje
-#      done"
+  backup:
+    image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
+    restart: always
+    env_file:
+      - .env
+    environment:
+      PGPASSWORD: ${DATABASE_PASSWORD}
+
+      DATABASE_HOST: db
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+    depends_on:
+      - db  # Zálohovací služba závisí na databázi
+    volumes:
+      - ./backups:/backups  # Ukládáme zálohy do lokální složky ./backups
+    entrypoint: >
+      sh -c "
+      mkdir -p /backups &&  # Vytvoříme složku pro zálohy (pokud neexistuje)
+      while true; do  # Spustí nekonečný cyklus pro pravidelný backup
+        pg_dump -h ${DATABASE_HOST} -U ${DATABASE_USER} ${DATABASE_NAME} > /backups/backup-\$(date +%Y%m%d-%H%M%S).sql &&  # Vytvoření zálohy s aktuálním datem a časem
+        sleep 86400;  # Počká 86400 sekund (24 hodin), než se záloha zopakuje
+      done"
 
 #  watchtower:
 #    image: containrrr/watchtower
