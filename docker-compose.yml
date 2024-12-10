@@ -54,6 +54,8 @@ services:
     env_file:
       - .env
     environment:
+      PGPASSWORD: ${DATABASE_PASSWORD}
+
       DATABASE_HOST: db
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}
@@ -65,7 +67,7 @@ services:
       sh -c "
       mkdir -p /backups &&  # Vytvoříme složku pro zálohy (pokud neexistuje)
       while true; do  # Spustí nekonečný cyklus pro pravidelný backup
-        pg_dump -h db -U ${DATABASE_USER} ${DATABASE_NAME} > /backups/backup-\$(date +%Y%m%d-%H%M%S).sql &&  # Vytvoření zálohy s aktuálním datem a časem
+        pg_dump -h ${DATABASE_HOST} -U ${DATABASE_USER} ${DATABASE_NAME} > /backups/backup-\$(date +%Y%m%d-%H%M%S).sql &&  # Vytvoření zálohy s aktuálním datem a časem
         sleep 86400;  # Počká 86400 sekund (24 hodin), než se záloha zopakuje
       done"
 
