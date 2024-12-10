@@ -1,40 +1,79 @@
+version: "3.9"
+
 services:
-  web:
-    networks:
-      - vontor-cz-net
+  db:
+    image: postgres
+    restart: always
     env_file:
       - .env
-    #loading enviroment variables from DigitalOcean
     environment:
-      - DATABASE_HOST=${DATABASE_HOST}
-      - DATABASE_PORT=${DATABASE_PORT}
-      - DATABASE_ENGINE=${DATABASE_ENGINE}
-      - DATABASE_NAME=${DATABASE_NAME}
-      - DATABASE_USER=${DATABASE_USER}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - TAILSCALE_API_KEY=${TAILSCALE_API_KEY}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
-      - AWS_S3_REGION_NAME=${AWS_S3_REGION_NAME}
-      - DEBUG=${DEBUG}
-
-    build: .
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
-      - .:/app
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DATABASE_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_ENGINE: ${DATABASE_ENGINE}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
+      DEBUG: ${DEBUG}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/django-app
     ports:
       - "8000:8000"
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations --noinput && python manage.py migrate --noinput && gunicorn -k uvicorn.workers.UvicornWorker vontor_cz.asgi:application --bind 0.0.0.0:8000"
+    command: sh -c "
+      python manage.py collectstatic --noinput &&
+      python manage.py makemigrations --noinput &&
+      python manage.py migrate --noinput &&
+      gunicorn -k uvicorn.workers.UvicornWorker vontor_cz.asgi:application --bind 0.0.0.0:8000"
 
-  
-  watchtower: #hlída změny v lokalní složce z repo
+  backup:
+    image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db  # Zálohovací služba závisí na databázi
+    volumes:
+      - ./backups:/backups  # Ukládáme zálohy do lokální složky ./backups
+    entrypoint: >
+      sh -c "
+      mkdir -p /backups &&  # Vytvoříme složku pro zálohy (pokud neexistuje)
+      while true; do  # Spustí nekonečný cyklus pro pravidelný backup
+        pg_dump -h db -U ${DATABASE_USER} ${DATABASE_NAME} > /backups/backup-\$(date +%Y%m%d-%H%M%S).sql &&  # Vytvoření zálohy s aktuálním datem a časem
+        sleep 86400;  # Počká 86400 sekund (24 hodin), než se záloha zopakuje
+      done"
+
+  watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WATCHTOWER_POLL_INTERVAL=60 # Check every minute
+      WATCHTOWER_POLL_INTERVAL: 60  # Kontrola změn každou minutu
     restart: unless-stopped
 
-networks:
-  vontor-cz-net:
-    driver: bridge
+volumes:
+  data:
+
+#docker-compose run --rm db psql -U ${DATABASE_USER} -d ${DATABASE_NAME} -f /backups/<název-zálohy>.sql
