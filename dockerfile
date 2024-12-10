@@ -17,6 +17,3 @@ RUN pip install -r requirements.txt
 
 # Copy the project files
 COPY . .
-
-# Expose the port the app runs on
-EXPOSE 8000

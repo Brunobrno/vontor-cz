@@ -1,23 +1,6 @@
 version: "3.9"
 
 services:
-  db:
-    image: postgres
-    restart: always
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: ${DATABASE_NAME}
-    volumes:
-      - data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DATABASE_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   web:
     build: .
     restart: always
@@ -40,13 +23,30 @@ services:
         condition: service_healthy
     volumes:
       - .:/django-app
-    ports:
-      - "8000:8000"
     command: sh -c "
       python manage.py collectstatic --noinput &&
       python manage.py makemigrations --noinput &&
       python manage.py migrate --noinput &&
       gunicorn -k uvicorn.workers.UvicornWorker vontor_cz.asgi:application --bind 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DATABASE_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backup:
     image: postgres  # Používáme oficiální obraz PostgreSQL, protože má `pg_dump`
